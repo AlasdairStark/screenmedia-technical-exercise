@@ -1,5 +1,3 @@
-using System;
-
 namespace Screenmedia.ToDo.Web.Models
 {
     public class ErrorViewModel

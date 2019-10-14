@@ -1,9 +1,12 @@
 ﻿@model Screenmedia.ToDo.Web.Models.ToDoNotes.ToDoNoteViewModel;
 
+@{
+    ViewData["Title"] = "Edit a ToDo Note";
+}
+
 <div>
     @using (Html.BeginForm("Update", "ToDoNotes", FormMethod.Post))
     {
-        @Html.AntiForgeryToken()
         @Html.ValidationSummary(true)
         @Html.HiddenFor(m => m.Id)
         @Html.LabelFor(m => m.Title) <br />

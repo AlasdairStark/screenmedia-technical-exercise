@@ -1,5 +1,9 @@
 ﻿@model Screenmedia.ToDo.Web.Models.ToDoNotes.ToDoNotesViewModel;
 
+@{
+    ViewData["Title"] = "List All ToDo Notes";
+}
+
 <div>
     @foreach (var toDoNote in @Model.ToDoNotes)
     {

@@ -8,7 +8,7 @@ namespace Screenmedia.ToDo.Web.AutoMapper
     {
         public ToDoNotesProfile()
         {
-            CreateMap<ToDoNote, ToDoNoteViewModel>();
+            CreateMap<ToDoNote, ToDoNoteViewModel>().ReverseMap();
         }
     }
 }

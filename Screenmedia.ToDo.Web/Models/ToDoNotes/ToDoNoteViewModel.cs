@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Screenmedia.ToDo.Web.Models
+namespace Screenmedia.ToDo.Web.Models.ToDoNotes
 {
     public class ToDoNoteViewModel
     {

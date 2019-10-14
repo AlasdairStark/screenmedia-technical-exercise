@@ -11,6 +11,7 @@ namespace Screenmedia.ToDo.Web.Data.Models
         // TODO - Re-evaluate use of the null-forgiving operator
         public string Title { get; set; } = default!;
         public string? Description { get; set; }
+        public bool Done { get; set; } = false;
         public bool Deleted { get; set; } = false;
         // TODO - Re-evaluate use of the null-forgiving operator
         public string ApplicationUserId { get; set; } = default!;

@@ -16,6 +16,6 @@ namespace Screenmedia.ToDo.Web.Data.Models
         // TODO - Re-evaluate use of the null-forgiving operator
         public string ApplicationUserId { get; set; } = default!;
         // TODO - Re-evaluate use of the null-forgiving operator
-        public Applicationuser ApplicationUser { get; set; } = default!;
+        public ApplicationUser ApplicationUser { get; set; } = default!;
     }
 }

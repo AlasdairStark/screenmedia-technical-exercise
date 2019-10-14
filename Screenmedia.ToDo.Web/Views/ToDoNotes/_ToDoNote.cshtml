@@ -1,7 +1,19 @@
 ﻿@model Screenmedia.ToDo.Web.Models.ToDoNotes.ToDoNoteViewModel
 
-@Html.HiddenFor(m => m.Id)
+<div class="@(Model.Done ? "done":"")">
+    <b>@Model.Title</b> - @Model.Description <br />
+    
+</div>
 <div>
-    <h3>@Model.Title</h3>
-    @Model.Description
+    @using (Html.BeginForm("Edit", "ToDoNotes", FormMethod.Get))
+    {
+        @Html.HiddenFor(m => m.Id)
+        <input type="submit" value="Edit" />
+    }
+
+    @using (Html.BeginForm("Delete", "ToDoNotes", FormMethod.Post))
+    {
+        @Html.HiddenFor(m => m.Id)
+        <input type="submit" value="Delete" />
+    }
 </div>

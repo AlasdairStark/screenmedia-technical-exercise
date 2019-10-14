@@ -1,0 +1,17 @@
+﻿@model Screenmedia.ToDo.Web.Models.ToDoNotes.ToDoNoteViewModel;
+
+<div>
+    @using (Html.BeginForm("Update", "ToDoNotes", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true)
+        @Html.HiddenFor(m => m.Id)
+        @Html.LabelFor(m => m.Title) <br />
+        @Html.TextBoxFor(m => m.Title) <br /><br />
+        @Html.LabelFor(m => m.Description) <br />
+        @Html.TextBoxFor(m => m.Description) <br /><br />
+        @Html.LabelFor(m => m.Done) <br />
+        @Html.CheckBoxFor(m => m.Done) <br /><br />
+        <button type="submit">Update</button>
+    }
+</div>

@@ -1,0 +1,14 @@
+﻿@model Screenmedia.ToDo.Web.Models.ToDoNotes.ToDoNoteViewModel;
+
+<div>
+    @using (Html.BeginForm("Create", "ToDoNotes", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true)
+        @Html.LabelFor(m => m.Title) <br />
+        @Html.TextBoxFor(m => m.Title) <br /><br />
+        @Html.LabelFor(m => m.Description) <br />
+        @Html.TextBoxFor(m => m.Description) <br /><br />
+        <button type="submit">Create</button>
+    }
+</div>

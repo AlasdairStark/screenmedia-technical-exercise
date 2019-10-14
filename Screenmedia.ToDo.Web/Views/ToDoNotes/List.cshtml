@@ -1,6 +1,8 @@
 ﻿@model Screenmedia.ToDo.Web.Models.ToDoNotes.ToDoNotesViewModel;
 
-@foreach (var toDoNote in @Model.ToDoNotes)
-{
-    await Html.RenderPartialAsync("_ToDoNote", toDoNote);
-}
+<div>
+    @foreach (var toDoNote in @Model.ToDoNotes)
+    {
+        await Html.RenderPartialAsync("_ToDoNote", toDoNote);
+    }
+</div>

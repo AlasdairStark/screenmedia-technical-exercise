@@ -28,12 +28,61 @@ namespace Screenmedia.ToDo.Web.Controllers
         [HttpGet]
         public IActionResult Get(int id)
         {
-            // TODO - Handling of async method
-            //var userId = _userManager.GetUserAsync(HttpContext.User).Result.Id;
-
-            var viewModel = _toDoNoteService.Read(id);
+            var viewModel = _toDoNoteService.Read(id, UserId);
 
             return View("_ToDoNote", viewModel);
         }
+
+        [HttpGet]
+        public IActionResult List()
+        {
+            var viewModel = _toDoNoteService.List(UserId);
+
+            return View("List", viewModel);
+        }
+
+        [HttpGet]
+        public IActionResult Create()
+        {
+            return View("Create");
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Create(ToDoNoteViewModel viewModel)
+        {
+            _toDoNoteService.Create(viewModel, UserId);
+
+            return List();
+        }
+
+        [HttpGet]
+        public IActionResult Edit(int id)
+        {
+            var toDoNote = _toDoNoteService.Read(id, UserId);
+
+            return View("Edit", toDoNote);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Update(ToDoNoteViewModel viewModel)
+        {
+            _toDoNoteService.Update(viewModel, UserId);
+
+            return List();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Delete(int id)
+        {
+            _toDoNoteService.Delete(id, UserId);
+
+            return List();
+        }
+
+        private string UserId =>
+            _userManager.GetUserAsync(HttpContext.User).Result.Id;
     }
 }

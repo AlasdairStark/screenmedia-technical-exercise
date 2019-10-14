@@ -8,6 +8,7 @@ namespace Screenmedia.ToDo.Web.Models.ToDoNotes
         // TODO - Re-evaluate use of the null-forgiving operator
         public string Title { get; set; } = default!;
         public string? Description { get; set; }
+        public bool Done { get; set; } = false;
         public bool Deleted { get; set; } = false;
     }
 }

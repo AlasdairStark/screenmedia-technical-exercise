@@ -2,7 +2,7 @@ using NUnit.Framework;
 
 namespace Screenmedia.ToDo.Tests.Unit
 {
-    public class Tests
+    public class UnitTest1
     {
         [SetUp]
         public void Setup()

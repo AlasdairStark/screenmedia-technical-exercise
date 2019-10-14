@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Screenmedia.ToDo.Web.Data;
+using Screenmedia.ToDo.Web.Services;
 
 namespace Screenmedia.ToDo.Web
 {
@@ -31,6 +32,9 @@ namespace Screenmedia.ToDo.Web
             services.AddControllersWithViews();
             services.AddRazorPages();
             services.AddAutoMapper(typeof(Startup));
+
+            // Registering service
+            services.AddTransient<IToDoNoteService, ToDoNoteService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -23,9 +23,11 @@ namespace Screenmedia.ToDo.Web.Services
             _mapper = mapper;
         }
 
-        public ToDoNotesViewModel List()
+        public ToDoNotesViewModel List(string applicationUserId)
         {
             var toDoNoteViewModels = _applicationDbContext.ToDoNotes
+                .Where(n => n.ApplicationUserId == applicationUserId && 
+                            !n.Deleted)
                 .Select(n => _mapper.Map<ToDoNoteViewModel>(n))
                 .ToList();
 
@@ -48,10 +50,12 @@ namespace Screenmedia.ToDo.Web.Services
             _applicationDbContext.SaveChanges();
         }
 
-        public ToDoNoteViewModel Read(int id)
+        public ToDoNoteViewModel Read(int id, string applicationUserId)
         {
             var toDoNote = _applicationDbContext.ToDoNotes
-                .FirstOrDefault(n => n.Id == id);
+                .FirstOrDefault(n => n.Id == id && 
+                                     n.ApplicationUserId == applicationUserId &&
+                                     !n.Deleted);
 
             // TODO - Refactor
             if (toDoNote == null)
@@ -60,13 +64,15 @@ namespace Screenmedia.ToDo.Web.Services
             return _mapper.Map<ToDoNoteViewModel>(toDoNote);
         }
 
-        public void Update(ToDoNoteViewModel toDoNoteViewModel)
+        public void Update(ToDoNoteViewModel toDoNoteViewModel, string applicationUserId)
         {
             if (toDoNoteViewModel == null)
                 throw new ArgumentNullException(nameof(toDoNoteViewModel));
 
             var toDoNote = _applicationDbContext.ToDoNotes
-                .FirstOrDefault(n => n.Id == toDoNoteViewModel.Id);
+                .FirstOrDefault(n => n.Id == toDoNoteViewModel.Id && 
+                                     n.ApplicationUserId == applicationUserId &&
+                                     !n.Deleted);
 
             // TODO - Refactor
             if (toDoNote == null)
@@ -74,14 +80,17 @@ namespace Screenmedia.ToDo.Web.Services
 
             toDoNote.Title = toDoNoteViewModel.Title;
             toDoNote.Description = toDoNoteViewModel.Description;
+            toDoNote.Done = toDoNoteViewModel.Done;
 
             _applicationDbContext.SaveChanges();
         }
 
-        public void Delete(int id)
+        public void Delete(int id, string applicationUserId)
         {
             var toDoNote = _applicationDbContext.ToDoNotes
-                .FirstOrDefault(n => n.Id == id);
+                .FirstOrDefault(n => n.Id == id && 
+                                     n.ApplicationUserId == applicationUserId &&
+                                     !n.Deleted);
 
             // TODO - Refactor
             if (toDoNote == null)

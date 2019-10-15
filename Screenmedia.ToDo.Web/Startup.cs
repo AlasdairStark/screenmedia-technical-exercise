@@ -32,8 +32,9 @@ namespace Screenmedia.ToDo.Web
             services.AddControllersWithViews();
             services.AddRazorPages();
 
-            // Registering service
+            // Registering services
             services.AddTransient<IToDoNoteService, ToDoNoteService>();
+            services.AddTransient<IApplicationDbContext, ApplicationDbContext>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Screenmedia.ToDo.Web.Data;
 using Screenmedia.ToDo.Web.Data.Models;
+using Screenmedia.ToDo.Web.Exceptions;
 using Screenmedia.ToDo.Web.Models.ToDoNotes;
 
 namespace Screenmedia.ToDo.Web.Services
@@ -57,9 +58,8 @@ namespace Screenmedia.ToDo.Web.Services
                                      n.ApplicationUserId == applicationUserId &&
                                      !n.Deleted);
 
-            // TODO - Refactor
             if (toDoNote == null)
-                throw new Exception();
+                throw new EntityNotFoundException<ToDoNote>(id);
 
             return _mapper.Map<ToDoNoteViewModel>(toDoNote);
         }
@@ -74,9 +74,8 @@ namespace Screenmedia.ToDo.Web.Services
                                      n.ApplicationUserId == applicationUserId &&
                                      !n.Deleted);
 
-            // TODO - Refactor
             if (toDoNote == null)
-                throw new Exception();
+                throw new EntityNotFoundException<ToDoNote>(toDoNoteViewModel.Id);
 
             toDoNote.Title = toDoNoteViewModel.Title;
             toDoNote.Description = toDoNoteViewModel.Description;
@@ -92,9 +91,8 @@ namespace Screenmedia.ToDo.Web.Services
                                      n.ApplicationUserId == applicationUserId &&
                                      !n.Deleted);
 
-            // TODO - Refactor
             if (toDoNote == null)
-                throw new Exception();
+                throw new EntityNotFoundException<ToDoNote>(id);
 
             toDoNote.Deleted = true;
 

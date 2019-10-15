@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using Screenmedia.ToDo.Web.Data.Models;
+using Screenmedia.ToDo.Web.Exceptions;
 using Screenmedia.ToDo.Web.Models.ToDoNotes;
 using Screenmedia.ToDo.Web.Services;
 
@@ -9,15 +12,18 @@ namespace Screenmedia.ToDo.Web.Controllers
     [Authorize]
     public class ToDoNotesController : Controller
     {
+        private readonly ILogger<ToDoNotesController> _logger;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly IToDoNoteService _toDoNoteService;
 
         public ToDoNotesController(
             UserManager<IdentityUser> userManager,
-            IToDoNoteService toDoNoteService)
+            IToDoNoteService toDoNoteService,
+            ILogger<ToDoNotesController> logger)
         {
             _userManager = userManager;
             _toDoNoteService = toDoNoteService;
+            _logger = logger;
         }
 
         [HttpGet]
@@ -59,9 +65,16 @@ namespace Screenmedia.ToDo.Web.Controllers
         [HttpGet]
         public IActionResult Edit(int id)
         {
-            var viewModel = _toDoNoteService.Read(id, UserId);
-
-            return View("Edit", viewModel);
+            try
+            {
+                var viewModel = _toDoNoteService.Read(id, UserId);
+                return View("Edit", viewModel);
+            }
+            catch (EntityNotFoundException<ToDoNote> ex)
+            {
+                _logger.LogDebug(ex.Message);
+                return NotFound();
+            }
         }
 
         [HttpPost]
@@ -73,7 +86,15 @@ namespace Screenmedia.ToDo.Web.Controllers
                 return View("Edit", viewModel);
             }
 
-            _toDoNoteService.Update(viewModel, UserId);
+            try
+            {
+                _toDoNoteService.Update(viewModel, UserId);
+            }
+            catch (EntityNotFoundException<ToDoNote> ex)
+            {
+                _logger.LogDebug(ex.Message);
+                return NotFound();
+            }
 
             return List();
         }
@@ -82,7 +103,15 @@ namespace Screenmedia.ToDo.Web.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Delete(int id)
         {
-            _toDoNoteService.Delete(id, UserId);
+            try
+            {
+                _toDoNoteService.Delete(id, UserId);
+            }
+            catch (EntityNotFoundException<ToDoNote> ex)
+            {
+                _logger.LogDebug(ex.Message);
+                return NotFound();
+            }
 
             return List();
         }

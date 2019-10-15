@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -27,17 +28,17 @@ namespace Screenmedia.ToDo.Web.Controllers
         }
 
         [HttpGet]
-        public IActionResult Get(int id)
+        public async Task<ActionResult> Get(int id)
         {
-            var viewModel = _toDoNoteService.Read(id, UserId);
+            var viewModel = _toDoNoteService.Read(id, await GetUserId().ConfigureAwait(false));
 
             return View("_ToDoNote", viewModel);
         }
 
         [HttpGet]
-        public IActionResult List()
+        public async Task<ActionResult> List()
         {
-            var viewModel = _toDoNoteService.List(UserId);
+            var viewModel = _toDoNoteService.List(await GetUserId().ConfigureAwait(false));
 
             return View("List", viewModel);
         }
@@ -50,24 +51,24 @@ namespace Screenmedia.ToDo.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(ToDoNoteViewModel viewModel)
+        public async Task<ActionResult> Create(ToDoNoteViewModel viewModel)
         {
             if (!ModelState.IsValid)
             {
                 return View("Create", viewModel);
             }
 
-            _toDoNoteService.Create(viewModel, UserId);
+            _toDoNoteService.Create(viewModel, await GetUserId().ConfigureAwait(false));
 
-            return List();
+            return await List().ConfigureAwait(false);
         }
 
         [HttpGet]
-        public IActionResult Edit(int id)
+        public async Task<ActionResult> Edit(int id)
         {
             try
             {
-                var viewModel = _toDoNoteService.Read(id, UserId);
+                var viewModel = _toDoNoteService.Read(id, await GetUserId().ConfigureAwait(false));
                 return View("Edit", viewModel);
             }
             catch (EntityNotFoundException<ToDoNote> ex)
@@ -79,7 +80,7 @@ namespace Screenmedia.ToDo.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Update(ToDoNoteViewModel viewModel)
+        public async Task<ActionResult> Update(ToDoNoteViewModel viewModel)
         {
             if (!ModelState.IsValid)
             {
@@ -88,7 +89,7 @@ namespace Screenmedia.ToDo.Web.Controllers
 
             try
             {
-                _toDoNoteService.Update(viewModel, UserId);
+                _toDoNoteService.Update(viewModel, await GetUserId().ConfigureAwait(false));
             }
             catch (EntityNotFoundException<ToDoNote> ex)
             {
@@ -96,16 +97,16 @@ namespace Screenmedia.ToDo.Web.Controllers
                 return NotFound();
             }
 
-            return List();
+            return await List().ConfigureAwait(false);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Delete(int id)
+        public async Task<ActionResult> Delete(int id)
         {
             try
             {
-                _toDoNoteService.Delete(id, UserId);
+                _toDoNoteService.Delete(id, await GetUserId().ConfigureAwait(false));
             }
             catch (EntityNotFoundException<ToDoNote> ex)
             {
@@ -113,10 +114,16 @@ namespace Screenmedia.ToDo.Web.Controllers
                 return NotFound();
             }
 
-            return List();
+            return await List().ConfigureAwait(false);
         }
 
-        private string UserId =>
-            _userManager.GetUserAsync(HttpContext.User).Result.Id;
+        private async Task<string> GetUserId()
+        {
+            var user = await _userManager.GetUserAsync(HttpContext.User).ConfigureAwait(false);
+            return user.Id;
+        }
+
+        //private string UserId =>
+        //    _userManager.GetUserAsync(HttpContext.User).Result.Id;
     }
 }

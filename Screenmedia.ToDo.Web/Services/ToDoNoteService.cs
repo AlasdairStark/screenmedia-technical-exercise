@@ -9,6 +9,8 @@ namespace Screenmedia.ToDo.Web.Services
 {
     public class ToDoNoteService : IToDoNoteService
     {
+        private const int MaxListSize = 10;
+
         private readonly IApplicationDbContext _applicationDbContext;
 
         public ToDoNoteService(IApplicationDbContext applicationDbContext)
@@ -63,6 +65,7 @@ namespace Screenmedia.ToDo.Web.Services
                     Description = n.Description,
                     Done = n.Done
                 })
+                .Take(MaxListSize)
                 .ToList();
 
             var viewModel = new ToDoNotesViewModel();

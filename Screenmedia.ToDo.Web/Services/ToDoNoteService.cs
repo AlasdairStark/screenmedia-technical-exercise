@@ -1,43 +1,19 @@
-﻿using Screenmedia.ToDo.Web.Data;
+﻿using System;
+using System.Linq;
+using Screenmedia.ToDo.Web.Data;
 using Screenmedia.ToDo.Web.Data.Models;
 using Screenmedia.ToDo.Web.Exceptions;
 using Screenmedia.ToDo.Web.Models.ToDoNotes;
-using System;
-using System.Linq;
 
 namespace Screenmedia.ToDo.Web.Services
 {
     public class ToDoNoteService : IToDoNoteService
     {
-        private readonly ApplicationDbContext _applicationDbContext;
+        private readonly IApplicationDbContext _applicationDbContext;
 
-        public ToDoNoteService(ApplicationDbContext applicationDbContext)
+        public ToDoNoteService(IApplicationDbContext applicationDbContext)
         {
             _applicationDbContext = applicationDbContext;
-        }
-
-        public ToDoNotesViewModel List(string applicationUserId)
-        {
-            var toDoNoteViewModels = _applicationDbContext.ToDoNotes
-                .Where(n => n.ApplicationUserId == applicationUserId && 
-                            !n.Deleted)
-                .Select(n => new ToDoNoteViewModel
-                {
-                    Id = n.Id,
-                    Title = n.Title,
-                    Description = n.Description,
-                    Done = n.Done
-                })
-                .ToList();
-
-            var viewModel = new ToDoNotesViewModel();
-
-            foreach(var toDoNoteViewModel in toDoNoteViewModels)
-            {
-                viewModel.ToDoNotes.Add(toDoNoteViewModel);
-            }
-
-            return viewModel;
         }
 
         public void Create(ToDoNoteViewModel toDoNoteViewModel, string applicationUserId)
@@ -73,6 +49,30 @@ namespace Screenmedia.ToDo.Web.Services
                 Description = toDoNote.Description,
                 Done = toDoNote.Done
             };
+        }
+
+        public ToDoNotesViewModel List(string applicationUserId)
+        {
+            var toDoNoteViewModels = _applicationDbContext.ToDoNotes
+                .Where(n => n.ApplicationUserId == applicationUserId && 
+                            !n.Deleted)
+                .Select(n => new ToDoNoteViewModel
+                {
+                    Id = n.Id,
+                    Title = n.Title,
+                    Description = n.Description,
+                    Done = n.Done
+                })
+                .ToList();
+
+            var viewModel = new ToDoNotesViewModel();
+
+            foreach(var toDoNoteViewModel in toDoNoteViewModels)
+            {
+                viewModel.ToDoNotes.Add(toDoNoteViewModel);
+            }
+
+            return viewModel;
         }
 
         public void Update(ToDoNoteViewModel toDoNoteViewModel, string applicationUserId)

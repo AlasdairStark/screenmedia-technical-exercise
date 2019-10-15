@@ -10,8 +10,8 @@ using Screenmedia.ToDo.Web.Data;
 namespace Screenmedia.ToDo.Web.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20191014194009_DoneColumn")]
-    partial class DoneColumn
+    [Migration("20191015004405_CreateToDoNoteSchema")]
+    partial class CreateToDoNoteSchema
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -242,14 +242,16 @@ namespace Screenmedia.ToDo.Web.Data.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(200)")
+                        .HasMaxLength(200);
 
                     b.Property<bool>("Done")
                         .HasColumnType("bit");
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(50)")
+                        .HasMaxLength(50);
 
                     b.HasKey("Id");
 

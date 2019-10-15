@@ -1,27 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Screenmedia.ToDo.Web.Data;
+﻿using Screenmedia.ToDo.Web.Data;
 using Screenmedia.ToDo.Web.Data.Models;
 using Screenmedia.ToDo.Web.Exceptions;
 using Screenmedia.ToDo.Web.Models.ToDoNotes;
+using System;
+using System.Linq;
 
 namespace Screenmedia.ToDo.Web.Services
 {
     public class ToDoNoteService : IToDoNoteService
     {
         private readonly ApplicationDbContext _applicationDbContext;
-        private readonly IMapper _mapper;
 
-        public ToDoNoteService(ApplicationDbContext applicationDbContext, IMapper mapper)
+        public ToDoNoteService(ApplicationDbContext applicationDbContext)
         {
             _applicationDbContext = applicationDbContext;
-            _mapper = mapper;
         }
 
         public ToDoNotesViewModel List(string applicationUserId)
@@ -29,7 +21,13 @@ namespace Screenmedia.ToDo.Web.Services
             var toDoNoteViewModels = _applicationDbContext.ToDoNotes
                 .Where(n => n.ApplicationUserId == applicationUserId && 
                             !n.Deleted)
-                .Select(n => _mapper.Map<ToDoNoteViewModel>(n))
+                .Select(n => new ToDoNoteViewModel
+                {
+                    Id = n.Id,
+                    Title = n.Title,
+                    Description = n.Description,
+                    Done = n.Done
+                })
                 .ToList();
 
             var viewModel = new ToDoNotesViewModel();
@@ -44,8 +42,15 @@ namespace Screenmedia.ToDo.Web.Services
 
         public void Create(ToDoNoteViewModel toDoNoteViewModel, string applicationUserId)
         {
-            var toDoNote = _mapper.Map<ToDoNote>(toDoNoteViewModel);
-            toDoNote.ApplicationUserId = applicationUserId;
+            if (toDoNoteViewModel == null)
+                throw new ArgumentNullException(nameof(toDoNoteViewModel));
+
+            var toDoNote = new ToDoNote
+            {
+                Title = toDoNoteViewModel.Title,
+                Description = toDoNoteViewModel.Description,
+                ApplicationUserId = applicationUserId
+            };
 
             _applicationDbContext.ToDoNotes.Add(toDoNote);
             _applicationDbContext.SaveChanges();
@@ -61,7 +66,13 @@ namespace Screenmedia.ToDo.Web.Services
             if (toDoNote == null)
                 throw new EntityNotFoundException<ToDoNote>(id);
 
-            return _mapper.Map<ToDoNoteViewModel>(toDoNote);
+            return new ToDoNoteViewModel
+            {
+                Id = toDoNote.Id,
+                Title = toDoNote.Title,
+                Description = toDoNote.Description,
+                Done = toDoNote.Done
+            };
         }
 
         public void Update(ToDoNoteViewModel toDoNoteViewModel, string applicationUserId)

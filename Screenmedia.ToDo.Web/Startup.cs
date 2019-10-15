@@ -1,4 +1,3 @@
-using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -32,7 +31,6 @@ namespace Screenmedia.ToDo.Web
 
             services.AddControllersWithViews();
             services.AddRazorPages();
-            services.AddAutoMapper(typeof(Startup));
 
             // Registering service
             services.AddTransient<IToDoNoteService, ToDoNoteService>();

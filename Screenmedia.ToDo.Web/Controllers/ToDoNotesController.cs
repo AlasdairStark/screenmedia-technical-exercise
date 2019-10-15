@@ -123,7 +123,5 @@ namespace Screenmedia.ToDo.Web.Controllers
             return user.Id;
         }
 
-        //private string UserId =>
-        //    _userManager.GetUserAsync(HttpContext.User).Result.Id;
     }
 }

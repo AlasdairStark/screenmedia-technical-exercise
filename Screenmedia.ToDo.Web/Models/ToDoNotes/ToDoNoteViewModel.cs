@@ -1,14 +1,19 @@
-﻿using System;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Screenmedia.ToDo.Web.Models.ToDoNotes
 {
     public class ToDoNoteViewModel
     {
         public int Id { get; set; }
-        // TODO - Re-evaluate use of the null-forgiving operator
+
+        [Required]
+        [StringLength(50)]
         public string Title { get; set; } = default!;
+        
+        [StringLength(200)]
         public string? Description { get; set; }
+
+        [Required]
         public bool Done { get; set; } = false;
-        public bool Deleted { get; set; } = false;
     }
 }

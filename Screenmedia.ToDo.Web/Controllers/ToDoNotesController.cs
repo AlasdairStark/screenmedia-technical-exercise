@@ -1,11 +1,6 @@
-﻿using System;
-using System.Linq;
-using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Screenmedia.ToDo.Web.Data;
-using Screenmedia.ToDo.Web.Data.Models;
 using Screenmedia.ToDo.Web.Models.ToDoNotes;
 using Screenmedia.ToDo.Web.Services;
 
@@ -51,6 +46,11 @@ namespace Screenmedia.ToDo.Web.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Create(ToDoNoteViewModel viewModel)
         {
+            if (!ModelState.IsValid)
+            {
+                return View("Create", viewModel);
+            }
+
             _toDoNoteService.Create(viewModel, UserId);
 
             return List();
@@ -59,15 +59,20 @@ namespace Screenmedia.ToDo.Web.Controllers
         [HttpGet]
         public IActionResult Edit(int id)
         {
-            var toDoNote = _toDoNoteService.Read(id, UserId);
+            var viewModel = _toDoNoteService.Read(id, UserId);
 
-            return View("Edit", toDoNote);
+            return View("Edit", viewModel);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Update(ToDoNoteViewModel viewModel)
         {
+            if (!ModelState.IsValid)
+            {
+                return View("Edit", viewModel);
+            }
+
             _toDoNoteService.Update(viewModel, UserId);
 
             return List();

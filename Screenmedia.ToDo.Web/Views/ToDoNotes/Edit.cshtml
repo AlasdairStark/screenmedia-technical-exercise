@@ -7,7 +7,7 @@
 <div>
     @using (Html.BeginForm("Update", "ToDoNotes", FormMethod.Post))
     {
-        @Html.ValidationSummary(true)
+        @Html.ValidationSummary(false)
         @Html.HiddenFor(m => m.Id)
         @Html.LabelFor(m => m.Title) <br />
         @Html.TextBoxFor(m => m.Title) <br /><br />

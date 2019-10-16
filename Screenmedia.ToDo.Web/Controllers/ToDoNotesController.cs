@@ -27,14 +27,6 @@ namespace Screenmedia.ToDo.Web.Controllers
         }
 
         [HttpGet]
-        public IActionResult Get(int id)
-        {
-            var viewModel = _toDoNoteService.Read(id, User.GetId());
-
-            return View("_ToDoNote", viewModel);
-        }
-
-        [HttpGet]
         public IActionResult List()
         {
             var viewModel = _toDoNoteService.List(User.GetId());
@@ -59,7 +51,7 @@ namespace Screenmedia.ToDo.Web.Controllers
 
             _toDoNoteService.Create(viewModel, User.GetId());
 
-            return List();
+            return RedirectToAction("List");
         }
 
         [HttpGet]
@@ -96,7 +88,7 @@ namespace Screenmedia.ToDo.Web.Controllers
                 return NotFound();
             }
 
-            return List();
+            return RedirectToAction("List");
         }
 
         [HttpPost]
@@ -113,7 +105,7 @@ namespace Screenmedia.ToDo.Web.Controllers
                 return NotFound();
             }
 
-            return List();
+            return RedirectToAction("List");
         }
     }
 }

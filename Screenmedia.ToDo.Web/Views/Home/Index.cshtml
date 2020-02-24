@@ -1,14 +1,14 @@
-﻿@{
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+
+@inject IViewLocalizer Localizer
+
+@{
     ViewData["Title"] = "Home Page";
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome to the ToDo tracker</h1>
+    <h1 class="display-4">@Localizer["Welcome to the ToDo Tracker"]</h1>
 </div>
 <div>
-    <p>Use the menu to access List and Create functionality. The list page allows you to Update and Delete ToDo notes. Please keep the following things in mind:</p>
-
-    <ul>
-        <li>There seems to be a bug in the boilerplate code which can incorrectly make it look like you are logged in after wiping the local database</li>
-    </ul>
+    <p>@Localizer["Use the menu to access List and Create functionality. The list page allows you to Update and Delete ToDo notes."]</p>
 </div>

@@ -25,4 +25,18 @@
 </PackageReference>
   </ItemGroup>
   
+  <ItemGroup>
+    <Folder Include="Resources\" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Update="Resources\Views.Home.Index.fr.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Views.Home.Index.fr.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="Resources\Views.Home.Index.fr.Designer.cs">
+      <DependentUpon>Views.Home.Index.fr-FR.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
 </Project>

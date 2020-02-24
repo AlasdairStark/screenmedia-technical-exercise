@@ -1,6 +1,9 @@
+using System.Collections.Generic;
+using System.Globalization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -35,6 +38,26 @@ namespace Screenmedia.ToDo.Web
             // Registering services
             services.AddTransient<IToDoNoteService, ToDoNoteService>();
             services.AddTransient<IApplicationDbContext, ApplicationDbContext>();
+
+            services.AddLocalization(options => options.ResourcesPath = "Resources");
+
+            services.AddMvc().AddViewLocalization();
+
+            services.Configure<RequestLocalizationOptions>(
+                o =>
+                {
+                    var supportedCultures = new List<CultureInfo>
+                    {
+                        new CultureInfo("en-GB"),
+                        new CultureInfo("fr-FR"),
+                    };
+
+                    o.DefaultRequestCulture = new RequestCulture("en-GB");
+                    // Formatting numbers, dates, etc.
+                    o.SupportedCultures = supportedCultures;
+                    // UI strings that we have localized.
+                    o.SupportedUICultures = supportedCultures;
+                });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -58,6 +81,8 @@ namespace Screenmedia.ToDo.Web
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            app.UseRequestLocalization();
 
             app.UseEndpoints(endpoints =>
             {

@@ -4,16 +4,25 @@
     ViewData["Title"] = "List All ToDo Notes";
 }
 
-<div>
-    @foreach (var toDoNote in @Model.ToDoNotes)
-    {
-        await Html.RenderPartialAsync("_ToDoNote", toDoNote);
-    }
-</div>
+@if (Model.ToDoNotes.Count > 0)
+{
+    <div>
+        @foreach (var toDoNote in @Model.ToDoNotes)
+        {
+            await Html.RenderPartialAsync("_ToDoNote", toDoNote);
+        }
+    </div>
 
-<div style="margin-top:20px">
-    Page @Model.PageNumber of @Model.PageCount
-</div>
+    <div style="margin-top:20px">
+        Page @Model.PageNumber of @Model.PageCount
+    </div>
+}
+else
+{
+    <div style="margin-top:20px">
+        No notes to display
+    </div>
+}
 
 @if (Model.PageCount > 1)
 {

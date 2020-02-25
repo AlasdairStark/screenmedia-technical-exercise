@@ -1,7 +1,11 @@
-﻿@model Screenmedia.ToDo.Web.Models.ToDoNotes.ToDoNotesViewModel;
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+
+@inject IViewLocalizer Localizer
+
+@model Screenmedia.ToDo.Web.Models.ToDoNotes.ToDoNotesViewModel;
 
 @{
-    ViewData["Title"] = "List All ToDo Notes";
+    ViewData["Title"] = @Localizer["List All ToDo Notes"];
 }
 
 <div>

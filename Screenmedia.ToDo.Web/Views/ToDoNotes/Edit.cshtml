@@ -1,7 +1,11 @@
-﻿@model Screenmedia.ToDo.Web.Models.ToDoNotes.ToDoNoteViewModel;
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+
+@inject IViewLocalizer Localizer
+
+@model Screenmedia.ToDo.Web.Models.ToDoNotes.ToDoNoteViewModel;
 
 @{
-    ViewData["Title"] = "Edit a ToDo Note";
+    ViewData["Title"] = Localizer["Edit a ToDo Note"];
 }
 
 <div>
@@ -15,6 +19,6 @@
         @Html.TextBoxFor(m => m.Description) <br /><br />
         @Html.LabelFor(m => m.Done) <br />
         @Html.CheckBoxFor(m => m.Done) <br /><br />
-        <button type="submit">Update</button>
+        <button type="submit">@Localizer["Update"]</button>
     }
 </div>

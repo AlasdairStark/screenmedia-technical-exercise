@@ -59,6 +59,11 @@ namespace Screenmedia.ToDo.Web.Services
                 .Where(n => n.ApplicationUserId == applicationUserId &&
                             !n.Deleted);
 
+            var toDoNoteCount = toDoNoteViewModelsQuery.Count();
+
+            if (toDoNoteCount == 0)
+                return new ToDoNotesViewModel();
+
             var pageCount = (int)Math.Ceiling((double)toDoNoteViewModelsQuery.Count() / PageSize);
 
             if (page < 1 || page > pageCount)

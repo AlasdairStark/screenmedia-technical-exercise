@@ -4,9 +4,37 @@
     ViewData["Title"] = "List All ToDo Notes";
 }
 
-<div>
-    @foreach (var toDoNote in @Model.ToDoNotes)
-    {
-        await Html.RenderPartialAsync("_ToDoNote", toDoNote);
-    }
-</div>
+@if (Model.ToDoNotes.Count > 0)
+{
+    <div>
+        @foreach (var toDoNote in @Model.ToDoNotes)
+        {
+            await Html.RenderPartialAsync("_ToDoNote", toDoNote);
+        }
+    </div>
+
+    <div style="margin-top:20px">
+        Page @Model.PageNumber of @Model.PageCount
+    </div>
+}
+else
+{
+    <div style="margin-top:20px">
+        No notes to display
+    </div>
+}
+
+@if (Model.PageCount > 1)
+{
+    <div style="margin-top:5px;">
+        @if (Model.PageNumber > 1)
+        {
+            <a asp-controller="ToDoNotes" asp-action="List" asp-route-page="@(Model.PageNumber - 1)">Previous</a>
+        }
+
+        @if (Model.PageNumber < Model.PageCount)
+        {
+            <a asp-controller="ToDoNotes" asp-action="List" asp-route-page="@(Model.PageNumber + 1)">Next</a>
+        }
+    </div>
+}

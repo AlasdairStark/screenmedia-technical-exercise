@@ -9,7 +9,7 @@ namespace Screenmedia.ToDo.Web.Services
 {
     public class ToDoNoteService : IToDoNoteService
     {
-        private const int MaxListSize = 10;
+        private const int PageSize = 5;
 
         private readonly IApplicationDbContext _applicationDbContext;
 
@@ -53,11 +53,23 @@ namespace Screenmedia.ToDo.Web.Services
             };
         }
 
-        public ToDoNotesViewModel List(string applicationUserId)
+        public ToDoNotesViewModel List(string applicationUserId, int page)
         {
-            var toDoNoteViewModels = _applicationDbContext.ToDoNotes
-                .Where(n => n.ApplicationUserId == applicationUserId && 
-                            !n.Deleted)
+            var toDoNoteViewModelsQuery = _applicationDbContext.ToDoNotes
+                .Where(n => n.ApplicationUserId == applicationUserId &&
+                            !n.Deleted);
+
+            var toDoNoteCount = toDoNoteViewModelsQuery.Count();
+
+            if (toDoNoteCount == 0)
+                return new ToDoNotesViewModel();
+
+            var pageCount = (int)Math.Ceiling((double)toDoNoteViewModelsQuery.Count() / PageSize);
+
+            if (page < 1 || page > pageCount)
+                throw new ArgumentOutOfRangeException(nameof(page));
+
+            var toDoNoteViewModels = toDoNoteViewModelsQuery
                 .Select(n => new ToDoNoteViewModel
                 {
                     Id = n.Id,
@@ -65,7 +77,8 @@ namespace Screenmedia.ToDo.Web.Services
                     Description = n.Description,
                     Done = n.Done
                 })
-                .Take(MaxListSize)
+                .Skip((page - 1) * PageSize)
+                .Take(PageSize)
                 .ToList();
 
             var viewModel = new ToDoNotesViewModel();
@@ -74,6 +87,9 @@ namespace Screenmedia.ToDo.Web.Services
             {
                 viewModel.ToDoNotes.Add(toDoNoteViewModel);
             }
+
+            viewModel.PageCount = pageCount;
+            viewModel.PageNumber = page;
 
             return viewModel;
         }

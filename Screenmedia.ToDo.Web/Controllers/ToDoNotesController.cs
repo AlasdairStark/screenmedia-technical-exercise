@@ -1,7 +1,5 @@
-﻿using System.Security.Claims;
-using System.Threading.Tasks;
+﻿using System;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Screenmedia.ToDo.Web.Data.Models;
@@ -27,9 +25,19 @@ namespace Screenmedia.ToDo.Web.Controllers
         }
 
         [HttpGet]
-        public IActionResult List()
+        public IActionResult List(int page = 1)
         {
-            var viewModel = _toDoNoteService.List(User.GetId());
+            ToDoNotesViewModel viewModel;
+
+            try
+            {
+                viewModel = _toDoNoteService.List(User.GetId(), page);
+            }
+            // If the user requested an unavailable page then try again with the default
+            catch (ArgumentOutOfRangeException)
+            {
+                viewModel = _toDoNoteService.List(User.GetId(), 1);
+            }
 
             return View("List", viewModel);
         }

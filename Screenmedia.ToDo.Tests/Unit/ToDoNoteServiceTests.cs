@@ -17,6 +17,7 @@ namespace Screenmedia.ToDo.Tests.Unit
     [Category("Unit")]
     public class ToDoNoteServiceTests
     {
+        private const int NumberOfNotes = 17;
         private string ApplicationUserId { get; set; } = default!;
 
         private IQueryable<ToDoNote> _toDoNotes = default!;
@@ -31,32 +32,31 @@ namespace Screenmedia.ToDo.Tests.Unit
 
             ApplicationUserId = _fixture.Create<string>();
 
-            _toDoNotes = new List<ToDoNote>
+            var toDoNotesList = new List<ToDoNote>();
+
+            for (var i = 0; i < NumberOfNotes; i++)
             {
-                new ToDoNote
-                {
-                    Id = _fixture.Create<int>(),
-                    ApplicationUserId = ApplicationUserId,
-                    Title = _fixture.Create<string>(),
-                    Description = _fixture.Create<string>()
-                },
-                new ToDoNote
-                {
-                    Id = _fixture.Create<int>(),
-                    ApplicationUserId = ApplicationUserId,
-                    Title = _fixture.Create<string>(),
-                    Description = _fixture.Create<string>()
-                },
-                // This last ToDo note belongs to another user so we should never see it in the tests
+                toDoNotesList.Add(
+                    new ToDoNote
+                    {
+                        Id = _fixture.Create<int>(),
+                        ApplicationUserId = ApplicationUserId,
+                        Title = _fixture.Create<string>(),
+                        Description = _fixture.Create<string>()
+                    });
+            }
+
+            // This note belongs to another user so we should never see it in the tests
+            toDoNotesList.Add(
                 new ToDoNote
                 {
                     Id = _fixture.Create<int>(),
                     ApplicationUserId = _fixture.Create<string>(),
                     Title = _fixture.Create<string>(),
                     Description = _fixture.Create<string>()
-                }
-            }
-            .AsQueryable();
+                });
+
+            _toDoNotes = toDoNotesList.AsQueryable();
 
             var mockSet = new Mock<DbSet<ToDoNote>>();
             mockSet.As<IQueryable<ToDoNote>>().Setup(m => m.Provider).Returns(_toDoNotes.Provider);
@@ -134,16 +134,16 @@ namespace Screenmedia.ToDo.Tests.Unit
             // Arrange
 
             // Act
-            var viewModel = _toDoNoteService.List(ApplicationUserId);
+            var viewModel = _toDoNoteService.List(ApplicationUserId, 1);
 
             // Assert
             viewModel.ToDoNotes.Should().NotBeNull();
-            viewModel.ToDoNotes.Count.Should().Be(2);
+            viewModel.ToDoNotes.Count.Should().Be(5);
 
             var toDoNotes = _toDoNotes.ToList();
 
-            viewModel.ToDoNotes[0].Id.Should().Be(toDoNotes[0].Id);
-            viewModel.ToDoNotes[1].Id.Should().Be(toDoNotes[1].Id);
+            for (var i = 0; i < 5; i++)
+                viewModel.ToDoNotes[i].Id.Should().Be(toDoNotes[i].Id);
         }
 
         [Test]
@@ -152,11 +152,51 @@ namespace Screenmedia.ToDo.Tests.Unit
             // Arrange
 
             // Act
-            var viewModel = _toDoNoteService.List(_fixture.Create<string>());
+            var viewModel = _toDoNoteService.List(_fixture.Create<string>(), 1);
 
             // Assert
             viewModel.ToDoNotes.Should().NotBeNull();
             viewModel.ToDoNotes.Should().BeEmpty();
+        }
+
+        [Test]
+        public void List_ValidPagination_ViewModelIsReturned()
+        {
+            // Arrange
+
+            // Act
+            var viewModel = _toDoNoteService.List(ApplicationUserId, 2);
+
+            // Assert
+            viewModel.ToDoNotes.Should().NotBeNull();
+            viewModel.ToDoNotes.Count.Should().Be(5);
+
+            var toDoNotes = _toDoNotes.ToList();
+
+            for (var i = 0; i < 5; i++)
+                viewModel.ToDoNotes[i].Id.Should().Be(toDoNotes[i+5].Id);
+        }
+
+        [Test]
+        public void List_InvalidPaginationLow_ViewModelIsReturned()
+        {
+            // Arrange
+
+            // Act
+
+            // Assert
+            Assert.Throws<ArgumentOutOfRangeException>(() => _toDoNoteService.List(ApplicationUserId, -1));
+        }
+
+        [Test]
+        public void List_InvalidPaginationHigh_ViewModelIsReturned()
+        {
+            // Arrange
+
+            // Act
+
+            // Assert
+            Assert.Throws<ArgumentOutOfRangeException>(() => _toDoNoteService.List(ApplicationUserId, 5));
         }
 
         [Test]

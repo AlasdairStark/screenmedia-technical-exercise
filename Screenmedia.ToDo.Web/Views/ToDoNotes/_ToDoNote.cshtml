@@ -1,19 +1,25 @@
 ﻿@model Screenmedia.ToDo.Web.Models.ToDoNotes.ToDoNoteViewModel
 
-<div class="@(Model.Done ? "done":"")">
-    <b>@Model.Title</b> - @Model.Description <br />
-    
-</div>
-<div>
-    @using (Html.BeginForm("Edit", "ToDoNotes", FormMethod.Get, new { @style = "display:inline" }))
-    {
-        @Html.HiddenFor(m => m.Id)
-        <input type="submit" value="Edit" />
-    }
+<div class="note">
+    <div class="@(Model.Done ? "done":"")">
+        <div class="title">
+            <b>@Model.Title</b>
+        </div>
+        <div class="description">
+            @Model.Description
+        </div>
+    </div>
+    <div style="margin:5px 0;">
+        @using (Html.BeginForm("Edit", "ToDoNotes", FormMethod.Get, new { @style = "display:inline" }))
+        {
+            @Html.HiddenFor(m => m.Id)
+            <input type="submit" value="Edit" />
+        }
 
-    @using (Html.BeginForm("Delete", "ToDoNotes", FormMethod.Post, new { @style = "display:inline" }))
-    {
-        @Html.HiddenFor(m => m.Id)
-        <input type="submit" value="Delete" />
-    }
+        @using (Html.BeginForm("Delete", "ToDoNotes", FormMethod.Post, new { @style = "display:inline" }))
+        {
+            @Html.HiddenFor(m => m.Id)
+            <input type="submit" value="Delete" />
+        }
+    </div>
 </div>
